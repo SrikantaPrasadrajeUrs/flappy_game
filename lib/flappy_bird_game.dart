@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 import 'package:flappy/components/background.dart';
 import 'package:flappy/components/bird.dart';
 import 'package:flappy/components/ground.dart';
+import 'components/pipe.dart';
 import 'package:flappy/components/pipe_manager.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
@@ -41,6 +42,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     pauseEngine();
 
     showDialog(
+      barrierDismissible: false,
       context: buildContext!,
       builder: (context) {
         return Dialog(
@@ -57,9 +59,10 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
                   border: Border.all(color: Colors.black, width: 2),
                 ),
                 child: Column(
+                  spacing: 10,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       "Game Over",
                       style: TextStyle(
                         fontSize: 24,
@@ -67,18 +70,15 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
                         color: Colors.red,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
+                    const Text(
                       "Tap to play again",
                       style: TextStyle(fontSize: 18),
                     ),
-                    SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        restartGame();
+                        restartGame(context);
                       },
-                      child: Text("Play Again"),
+                      child: const Text("Play Again"),
                     ),
                   ],
                 ),
@@ -90,17 +90,19 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     );
   }
 
-  void removeChildren() {
-
+  void removeAllPipes(){
+    for (var pipe in children.whereType<Pipe>()) {
+      pipe.removeFromParent();
+    }
   }
 
-  void restartGame() {
+  void restartGame(BuildContext context) {
     bird.position = Vector2(birdStartX, birdStartY);
     bird.velocity = 0;
     isGameOver = false;
+    removeAllPipes();
     pipeManager.pipeSpawnTimer = 0;
-    removeChildren();
-    onLoad();
     resumeEngine();
+    Navigator.of(context).pop();
   }
 }

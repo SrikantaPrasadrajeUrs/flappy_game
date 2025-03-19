@@ -1,12 +1,8 @@
-
-
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flappy/game.dart';
-
+import '../flappy_bird_game.dart';
 import '../constants.dart';
-import 'bird.dart';
 
 class Pipe extends SpriteComponent with CollisionCallbacks, HasGameRef<FlappyBirdGame>{
  final bool isBottomPipe;
@@ -15,14 +11,22 @@ class Pipe extends SpriteComponent with CollisionCallbacks, HasGameRef<FlappyBir
   @override
   FutureOr<void> onLoad() async{
     sprite = await Sprite.load(isBottomPipe?"pipe-green_up.png":"pipe-green_down.png");
+    add(RectangleHitbox());
   }
 
   @override
   void update(double dt) {
     position.x -=groundScrollingSpeed*dt;
-    if(position.x<=0){
+    if(position.x+size.x<0){
      removeFromParent();
     }
-    add(RectangleHitbox());
+  }
+
+  @override
+  void onRemove(){
+    super.onRemove();
+    children.whereType<RectangleHitbox>().forEach((hitbox) {
+      hitbox.removeFromParent();
+    });
   }
 }
