@@ -1,6 +1,6 @@
-import 'package:flame/game.dart';
+import 'package:flappy/core/theme/theme.dart';
+import 'package:flappy/views/splash.dart';
 import 'package:flutter/material.dart';
-import 'flappy_bird_game.dart';
 
 
 void main() {
@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: AppTheme.flappyGameTheme,
         debugShowCheckedModeBanner: false,
-        home: GameWidget(game: FlappyBirdGame()));
+        home: const Splash());
   }
 }

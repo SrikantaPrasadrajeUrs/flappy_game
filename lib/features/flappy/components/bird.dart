@@ -1,11 +1,10 @@
 import 'dart:async' as async;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flappy/components/pipe.dart';
 import 'package:flappy/constants.dart';
-import '../flappy_bird_game.dart';
-
-import 'ground.dart';
+import 'package:flappy/core/managers/game_speed_manager.dart';
+import '../views/flappy_bird_game.dart';
+import 'flappy_components.dart';
 
 class Bird extends SpriteComponent with CollisionCallbacks{
   late Sprite bMidFlapSprite;
@@ -51,7 +50,7 @@ class Bird extends SpriteComponent with CollisionCallbacks{
   }
 
   void flap()async{
-    velocity = jumpStrength;
+    velocity = GameSpeedManager.jumpStrength;
   }
 
   @override

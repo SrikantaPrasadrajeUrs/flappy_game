@@ -1,11 +1,15 @@
 import 'package:flame/components.dart';
 import 'package:flappy/constants.dart';
-import '../flappy_bird_game.dart';
-import 'package:flappy/components/pipe.dart';
+import 'package:flappy/core/config/game_constants.dart';
 import 'dart:math' as math;
+import '../views/flappy_bird_game.dart';
+import 'package:flappy/features/flappy/components/flappy_components.dart';
 
 class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
-
+  static const double maxPipGap = 270;
+  static const double minPipeGap = 200;
+  static const double minPipeHeight = 100;
+  static const double pipeWidth = 60;
   double pipeSpawnTimer = 0;
   static double pipeInterval = 3;
   @override
@@ -21,10 +25,6 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
 
   void spawnPipe(){
     final double screenHeight = gameRef.size.y;
-    const double maxPipGap = 250;
-    const double minPipeGap = 180;
-    const double minPipeHeight = 100;
-    const double pipeWidth = 60;
     final pipeGap = math.Random().nextInt(2)==0?minPipeGap:maxPipGap;
     double maxPipeHeight = screenHeight - groundHeight - minPipeHeight - pipeGap;
     final double bottomPipeHeight = minPipeHeight +math.Random().nextDouble()*(maxPipeHeight-minPipeHeight);
@@ -45,6 +45,11 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
       isBottomPipe: false,
     );
     gameRef.addAll([bottomPipe,topPipe]);
+  }
+
+  // pipe and ground speed increase
+  void increaseSpeed(){
+
   }
 
 }

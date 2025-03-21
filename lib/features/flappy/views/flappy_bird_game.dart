@@ -2,16 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flappy/components/background.dart';
-import 'package:flappy/components/bird.dart';
-import 'package:flappy/components/ground.dart';
-import 'components/pipe.dart';
-import 'package:flappy/components/pipe_manager.dart';
+import 'package:flappy/core/config/game_constants.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
+import 'package:flappy/features/flappy/components/flappy_components.dart';
+
+import '../../../core/managers/game_speed_manager.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   bool isGameOver = false;
+  Timer? _speedIncreaseTimer;
   late Bird bird;
   late Background background;
   late Ground ground;
@@ -24,6 +23,8 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     ground = Ground();
     pipeManager = PipeManager();
     addAll([background,bird, ground, pipeManager]);
+    _speedIncreaseTimer = Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
+    return super.onLoad();
   }
 
   @override
@@ -40,7 +41,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     log("gameOver");
     isGameOver = true;
     pauseEngine();
-
+    _speedIncreaseTimer?.cancel();
     showDialog(
       barrierDismissible: false,
       context: buildContext!,
@@ -52,14 +53,13 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
             children: [
               Container(
                 width: 300,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.black, width: 2),
                 ),
                 child: Column(
-                  spacing: 10,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
@@ -97,12 +97,14 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   void restartGame(BuildContext context) {
-    bird.position = Vector2(birdStartX, birdStartY);
+    _speedIncreaseTimer = Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
+    bird.position = Vector2(GameConstants.birdStartX, GameConstants.birdStartY);
     bird.velocity = 0;
     isGameOver = false;
     removeAllPipes();
     pipeManager.pipeSpawnTimer = 0;
     resumeEngine();
+    GameSpeedManager.resetSpeed();
     Navigator.of(context).pop();
   }
 }

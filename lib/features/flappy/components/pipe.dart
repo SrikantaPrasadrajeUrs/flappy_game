@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import '../flappy_bird_game.dart';
-import '../constants.dart';
+import 'package:flappy/core/managers/game_speed_manager.dart';
+import '../views/flappy_bird_game.dart';
 
 class Pipe extends SpriteComponent with CollisionCallbacks, HasGameRef<FlappyBirdGame>{
  final bool isBottomPipe;
@@ -16,7 +16,7 @@ class Pipe extends SpriteComponent with CollisionCallbacks, HasGameRef<FlappyBir
 
   @override
   void update(double dt) {
-    position.x -=groundScrollingSpeed*dt;
+    position.x -=GameSpeedManager.pipeSpeed*dt;
     if(position.x+size.x<0){
      removeFromParent();
     }
