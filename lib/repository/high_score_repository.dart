@@ -4,14 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HighScoreRepository{
   static const String flappyKey = "flappy_high_score";
 
-  Future<int> getHighScore() async{
+  Future<String> getHighScore() async{
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(flappyKey) ?? 0;
+    return prefs.getString(flappyKey) ?? "00:00";
   }
 
-  Future<void> setHighScore(int score) async{
+  Future<void> setHighScore(String score) async{
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt(flappyKey, score);
+    prefs.setString(flappyKey, score);
   }
 
 }

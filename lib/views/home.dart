@@ -1,5 +1,7 @@
 import 'package:flappy/core/utils/utility_methods.dart';
+import 'package:flappy/features/flappy/flappy_bloc/flappy_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../features/flappy/views/flappy_home.dart';
 
@@ -18,7 +20,9 @@ class Home extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _gameButton(context, "Flappy", const FlappyHome()),
+                _gameButton(context, "Flappy", MultiBlocProvider(
+                    providers: [BlocProvider(create: (context) => FlappyBloc())],
+                    child: const FlappyHome())),
                 const SizedBox(width: 20),
                 _gameButton(context, "Rocket", const FlappyHome()), // Replace with RocketHome()
               ],

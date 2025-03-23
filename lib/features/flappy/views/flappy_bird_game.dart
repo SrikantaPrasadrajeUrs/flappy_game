@@ -1,94 +1,152 @@
-import 'dart:async';
+import 'dart:async' as async;
 import 'dart:developer';
+import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flappy/core/config/game_constants.dart';
+import 'package:flappy/features/flappy/flappy_bloc/flappy_bloc.dart';
+import 'package:flappy/features/flappy/views/flappy_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flappy/features/flappy/components/flappy_components.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/managers/game_speed_manager.dart';
+import '../../../core/utils/utility_methods.dart';
+import '../components/game_over_dialog.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
+  String _highScore = "00:00";
+  final FlappyBloc flappyBloc;
   bool isGameOver = false;
-  Timer? _speedIncreaseTimer;
+  async.Timer? _speedIncreaseTimer;
   late Bird bird;
   late Background background;
   late Ground ground;
   late PipeManager pipeManager;
+  late TextComponent textComponent;
+  late TextComponent survivalTimerText;
+  late DateTime _startTime;
+  Duration _elapsedTime = Duration.zero;
+  async.Timer? _gameTimer;
+
+  FlappyBirdGame({required String highScore, required this.flappyBloc}):_highScore = highScore;
 
   @override
-  FutureOr<void> onLoad() {
+  async.FutureOr<void> onLoad() {
     bird = Bird();
     background = Background(size);
     ground = Ground();
     pipeManager = PipeManager();
-    addAll([background,bird, ground, pipeManager]);
-    _speedIncreaseTimer = Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
+    // ----------------------------
+    textComponent = TextComponent(
+      text: "High Score: $_highScore",
+      position: Vector2(170, size.y-30),
+      anchor: Anchor.topRight,
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          shadows: [
+            Shadow(blurRadius: 5, color: Colors.black, offset: Offset(2, 2))
+          ],
+        ),
+      ),
+    );
+
+    // ----------------------------
+    survivalTimerText = TextComponent(
+      text: "Time: 00:00",
+      position: Vector2(size.x, 50),
+      anchor: Anchor.topRight,
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.yellow,
+          shadows: [
+            Shadow(blurRadius: 5, color: Colors.black, offset: Offset(2, 2))
+          ],
+        ),
+      ),
+    );
+
+    addAll([background, bird, ground, pipeManager, textComponent, survivalTimerText]);
+    _speedIncreaseTimer = async.Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
+    startGameTimer();
     return super.onLoad();
+  }
+
+  void startGameTimer(){
+    _startTime = DateTime.now();
+    _gameTimer?.cancel();
+    _gameTimer = async.Timer.periodic(const Duration(milliseconds: 100),(timer){
+      if(isGameOver){
+        timer.cancel();
+        survivalTimerText.text = "Time: 00:00";
+        return;
+      }
+      _elapsedTime = DateTime.now().difference(_startTime);
+      survivalTimerText.text = _formatElapsedTimer(_elapsedTime);
+    });
+  }
+
+  String _formatElapsedTimer(Duration time){
+    int min = time.inMinutes;
+    int sec = time.inSeconds % 60;
+    return "Time: ${min.toString().padLeft(2,"0")}:${sec.toString().padLeft(2,"0")}";
   }
 
   @override
   void onTap(){
     bird.flap();
-    // on top reach
+    // on top touch
     if(bird.position.y<=0){
       gameOver();
     }
   }
+
+
 
   void gameOver() {
     if (isGameOver) return;
     log("gameOver");
     isGameOver = true;
     pauseEngine();
-    _speedIncreaseTimer?.cancel();
+    checkHighScore();
+    showGameOverDialog(buildContext!);
+  }
+
+  void checkHighScore(){
+    List<String> highScoreParts = _highScore.split(":");
+    int highScoreMin = int.parse(highScoreParts[0]);
+    int highScoreSec = int.parse(highScoreParts[1]);
+    List<String> currentScoreParts = survivalTimerText.text.split(":");
+    int currentScoreMin = int.parse(currentScoreParts[1]);
+    int currentScoreSec = int.parse(currentScoreParts[2]);
+    if(highScoreMin<currentScoreMin||(highScoreMin==currentScoreMin&&highScoreSec<currentScoreSec)){
+      _highScore = "${currentScoreMin<10?"0":""}$currentScoreMin:${currentScoreSec<10?"0":""}$currentScoreSec";
+      textComponent.text = "High Score: $_highScore";
+      flappyBloc.storeHighScore(_highScore);
+    }
+  }
+
+  void showGameOverDialog(BuildContext context) {
     showDialog(
       barrierDismissible: false,
-      context: buildContext!,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                width: 300,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.black, width: 2),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "Game Over",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
-                    ),
-                    const Text(
-                      "Tap to play again",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        restartGame(context);
-                      },
-                      child: const Text("Play Again"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      context: context,
+      builder: (_) => GameOverDialog(
+        survivalTime: survivalTimerText.text,
+        onRestart: () => restartGame(context),
+        onExit: () {
+          resetFields();
+          navigateTo(child: BlocProvider.value(
+              value: FlappyBloc(),
+              child: const FlappyHome()), context: context);
+        },
+      ),
     );
   }
+
 
   void removeAllPipes(){
     for (var pipe in children.whereType<Pipe>()) {
@@ -96,15 +154,22 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     }
   }
 
-  void restartGame(BuildContext context) {
-    _speedIncreaseTimer = Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
+  void resetFields(){
+    _speedIncreaseTimer?.cancel();
     bird.position = Vector2(GameConstants.birdStartX, GameConstants.birdStartY);
     bird.velocity = 0;
+    pipeManager.pipeSpawnTimer = 0;
+    removeAllPipes();
+    GameSpeedManager.resetSpeed();
+  }
+
+  void restartGame(BuildContext context) {
+    resetFields();
+    _speedIncreaseTimer = async.Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
     isGameOver = false;
     removeAllPipes();
-    pipeManager.pipeSpawnTimer = 0;
     resumeEngine();
-    GameSpeedManager.resetSpeed();
-    Navigator.of(context).pop();
+    startGameTimer();
+    goBack(context);
   }
 }

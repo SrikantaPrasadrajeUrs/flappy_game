@@ -5,7 +5,7 @@ class GameSpeedManager {
   static double jumpStrength = GameConstants.jumpStrength;
   static double groundSpeed = GameConstants.groundScrollingSpeed;
   static double pipeSpeed = GameConstants.groundScrollingSpeed;
-  static const double speedIncrease = 50;
+  static const double speedIncrease = 30;
 
   static void increaseSpeed() {
     groundSpeed += speedIncrease;
