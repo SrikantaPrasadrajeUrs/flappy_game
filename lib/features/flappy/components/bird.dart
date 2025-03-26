@@ -18,12 +18,25 @@ class Bird extends SpriteComponent with CollisionCallbacks{
   late Sprite upFlapSprite;
   late Sprite downFlapSprite;
 
-  bool turns  = false;
+  bool isYellowBird  = false;
   Bird():super(position: Vector2(birdStartX, birdStartY), size: Vector2(birdWidth, birdWidth));
 
   double velocity =0;
 
-  void loadSprites()async{
+  DateTime? _lastFlapTime;
+  double currentJumpStrength = GameSpeedManager.jumpStrength;
+
+  @override
+  async.FutureOr<void> onLoad() async{
+    await _loadSprites();
+    _setBlueBird();
+    add(RectangleHitbox());
+    async.Timer.periodic(const Duration(seconds: backgroundChangeInterval), (timer) {
+     _toggleBirdColor();
+    });
+  }
+
+  Future<void> _loadSprites() async {
     yMidFlapSprite = await Sprite.load("yellowbird-midflap.png");
     yUpFlapSprite = await Sprite.load("yellowbird-upflap.png");
     yDownFlapSprite = await Sprite.load("yellowbird-downflap.png");
@@ -32,25 +45,46 @@ class Bird extends SpriteComponent with CollisionCallbacks{
     bDownFlapSprite = await Sprite.load("bluebird-downflap.png");
   }
 
-  @override
-  async.FutureOr<void> onLoad() async{
-    midFlapSprite = await Sprite.load("bluebird-midflap.png");
-    upFlapSprite = await Sprite.load("bluebird-upflap.png");
-    downFlapSprite = await Sprite.load("bluebird-downflap.png");
-    loadSprites();
+  void _setBlueBird() {
+    midFlapSprite = bMidFlapSprite;
+    upFlapSprite = bUpFlapSprite;
+    downFlapSprite = bDownFlapSprite;
     sprite = midFlapSprite;
-    add(RectangleHitbox());
-    async.Timer.periodic(const Duration(seconds: backgroundChangeInterval), (timer) {
-      midFlapSprite = turns?yMidFlapSprite:bMidFlapSprite;
-      upFlapSprite = turns?yUpFlapSprite:bUpFlapSprite;
-      downFlapSprite = turns?yDownFlapSprite:bDownFlapSprite;
-      sprite = midFlapSprite;
-      turns = !turns;
-    });
+  }
+
+  void _setYellowBird() {
+    midFlapSprite = yMidFlapSprite;
+    upFlapSprite = yUpFlapSprite;
+    downFlapSprite = yDownFlapSprite;
+    sprite = midFlapSprite;
+  }
+
+  void _toggleBirdColor() {
+    isYellowBird = !isYellowBird;
+    isYellowBird ? _setYellowBird() : _setBlueBird();
   }
 
   void flap()async{
-    velocity = GameSpeedManager.jumpStrength;
+    final now = DateTime.now();
+    if(_lastFlapTime!=null){
+      int diff = now.difference(_lastFlapTime!).inMilliseconds;
+      if(diff<=200){
+        currentJumpStrength = currentJumpStrength*1.3;
+      }else if(diff>200&&diff<=500){
+        currentJumpStrength = currentJumpStrength*1.2;
+      }else{
+        currentJumpStrength = GameSpeedManager.jumpStrength;
+      }
+    }else{
+      currentJumpStrength = GameSpeedManager.jumpStrength;
+    }
+
+    if(currentJumpStrength>GameSpeedManager.jumpStrength*1.5){
+      currentJumpStrength = GameSpeedManager.jumpStrength;
+    }
+    _lastFlapTime = DateTime.now();
+    velocity = currentJumpStrength;
+
   }
 
   @override

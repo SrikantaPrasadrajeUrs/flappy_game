@@ -7,11 +7,12 @@ import 'package:flappy/features/flappy/components/flappy_components.dart';
 
 class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
   static const double maxPipGap = 270;
-  static const double minPipeGap = 200;
+  static const double minPipeGap = 300;
   static const double minPipeHeight = 100;
   static const double pipeWidth = 60;
   double pipeSpawnTimer = 0;
   static double pipeInterval = 3;
+
   @override
   void update(double dt){
     pipeSpawnTimer +=dt;
@@ -24,6 +25,8 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
   }
 
   void spawnPipe(){
+    bool isSinglePipe = false;
+    bool onlyTopPipe = false;
     final double screenHeight = gameRef.size.y;
     final pipeGap = math.Random().nextInt(2)==0?minPipeGap:maxPipGap;
     double maxPipeHeight = screenHeight - groundHeight - minPipeHeight - pipeGap;
@@ -33,7 +36,6 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
     if (topPipeHeight < minPipeHeight) {
       return;
     }
-
     final bottomPipe = Pipe(
       Vector2(gameRef.size.x,screenHeight-groundHeight-bottomPipeHeight),
       Vector2(pipeWidth,bottomPipeHeight),
@@ -44,6 +46,16 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
       Vector2(pipeWidth,topPipeHeight),
       isBottomPipe: false,
     );
+   isSinglePipe = math.Random().nextInt(5)==3;
+    if(isSinglePipe){
+      onlyTopPipe = math.Random().nextInt(2)==0;
+      if(onlyTopPipe){
+        gameRef.add(topPipe);
+      }else{
+        gameRef.add(bottomPipe);
+      }
+      return;
+    }
     gameRef.addAll([bottomPipe,topPipe]);
   }
 

@@ -88,7 +88,7 @@ class _GameOverDialogState extends State<GameOverDialog> with SingleTickerProvid
                 const SizedBox(height: 10),
                 Text(
                   widget.survivalTime,
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  style: const TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 const SizedBox(height: 20),
                 Row(
