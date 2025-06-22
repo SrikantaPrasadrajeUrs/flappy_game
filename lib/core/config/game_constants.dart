@@ -10,4 +10,9 @@ class GameConstants {
   static const int backgroundChangeInterval = 10;
   static const double groundHeight = 200;
   static const double groundScrollingSpeed = 100;
+
+  static const double maxPipGap = 270;
+  static const double minPipeGap = 300;
+  static const double minPipeHeight = 100;
+  static const double pipeWidth = 60;
 }

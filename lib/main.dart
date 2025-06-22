@@ -1,10 +1,11 @@
 import 'package:flappy/core/theme/theme.dart';
-import 'package:flappy/views/splash.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'features/flappy/flappy_bloc/flappy_bloc.dart';
+import 'features/flappy/views/splash.dart';
 
-void main() {
+
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

@@ -1,8 +1,10 @@
 import 'package:flappy/core/theme/theme.dart';
-import 'package:flappy/views/home.dart';
 import 'package:flutter/material.dart';
-
-import '../core/utils/utility_methods.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/resources/game_assets.dart';
+import '../../../core/utils/utility_methods.dart';
+import '../flappy_bloc/flappy_bloc.dart';
+import 'flappy_home.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -12,13 +14,14 @@ class Splash extends StatefulWidget {
 }
 
 class _RocketScreenState extends State<Splash> {
-
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      Future.delayed(const Duration(seconds: 3),()=>navigateTo(child: const Home(), context: context));
+    WidgetsBinding.instance.addPostFrameCallback((_)async{
+      await GameAssets.initGameAssets();
+      await Future.delayed(const Duration(seconds: 2),()=>navigateTo(child: MultiBlocProvider(
+          providers: [BlocProvider(create: (context) => FlappyBloc())],
+          child: const FlappyHome()), context: context));
     });
   }
 

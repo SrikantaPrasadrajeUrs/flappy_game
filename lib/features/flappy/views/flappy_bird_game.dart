@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flappy/core/config/game_constants.dart';
 import 'package:flappy/features/flappy/flappy_bloc/flappy_bloc.dart';
 import 'package:flappy/features/flappy/views/flappy_home.dart';
@@ -14,6 +15,7 @@ import '../../../core/utils/utility_methods.dart';
 import '../components/game_over_dialog.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
+  final int birdType;
   String _highScore = "00:00";
   final FlappyBloc flappyBloc;
   bool isGameOver = false;
@@ -28,11 +30,11 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   Duration _elapsedTime = Duration.zero;
   async.Timer? _gameTimer;
 
-  FlappyBirdGame({required String highScore, required this.flappyBloc}):_highScore = highScore;
+  FlappyBirdGame({required String highScore, required this.flappyBloc, required this.birdType}):_highScore = highScore;
 
   @override
-  async.FutureOr<void> onLoad() {
-    bird = Bird();
+  async.FutureOr<void> onLoad() async{
+    bird = Bird(birdType: birdType);
     background = Background(size);
     ground = Ground();
     pipeManager = PipeManager();
@@ -69,9 +71,9 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
         ),
       ),
     );
-
     addAll([background, bird, ground, pipeManager, textComponent, survivalTimerText]);
     _speedIncreaseTimer = async.Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
+    await FlameAudio.audioCache.loadAll(["trap_basic_sound.mp3", "zombie.mp3", "zombie1.mp3"]);
     startGameTimer();
     return super.onLoad();
   }
@@ -109,6 +111,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   void gameOver() {
     if (isGameOver) return;
+    resetFields();
     log("gameOver");
     isGameOver = true;
     pauseEngine();
@@ -156,6 +159,9 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   void resetFields(){
     _speedIncreaseTimer?.cancel();
+    _speedIncreaseTimer = null;
+    _gameTimer?.cancel();
+    _gameTimer = null;
     bird.position = Vector2(GameConstants.birdStartX, GameConstants.birdStartY);
     bird.velocity = 0;
     pipeManager.pipeSpawnTimer = 0;
