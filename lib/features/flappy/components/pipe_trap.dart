@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flappy/core/managers/audio_manager.dart';
 import 'package:flappy/features/flappy/components/pipe.dart';
 import '../../../core/resources/game_assets.dart';
 import '../views/flappy_bird_game.dart';
@@ -39,7 +39,7 @@ class PipeTrap extends SpriteComponent with HasGameRef<FlappyBirdGame>, Collisio
     final birdX = gameRef.bird.position.x;
     final trapX = position.x;
     if(!isPopped&&trapX - birdX<=150){
-      playTrapSound(trapType);
+      // playTrapSound(trapType);
      position.y = bottomPipe.position.y - size.y;
      isPopped = true;
      priority = 1;
@@ -50,14 +50,12 @@ class PipeTrap extends SpriteComponent with HasGameRef<FlappyBirdGame>, Collisio
   }
 
   void playTrapSound(int trapSoundType){
-    FlameAudio.play(GameAssets.getTrapType(trapSoundType), volume: 2.5);
+    AudioManager.playAudio(GameAssets.getTrapType(trapSoundType), volume: 3);
   }
 
   @override
   void onRemove(){
     super.onRemove();
-    children.whereType<RectangleHitbox>().forEach((hitbox) {
-      hitbox.removeFromParent();
-    });
+    children.whereType<RectangleHitbox>().forEach((hitBox) => hitBox.removeFromParent());
   }
 }

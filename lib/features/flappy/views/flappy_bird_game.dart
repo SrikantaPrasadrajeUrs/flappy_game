@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flappy/core/config/game_constants.dart';
 import 'package:flappy/features/flappy/flappy_bloc/flappy_bloc.dart';
 import 'package:flappy/features/flappy/views/flappy_home.dart';
@@ -73,7 +72,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     );
     addAll([background, bird, ground, pipeManager, textComponent, survivalTimerText]);
     _speedIncreaseTimer = async.Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
-    await FlameAudio.audioCache.loadAll(["trap_basic_sound.mp3", "zombie.mp3", "zombie1.mp3"]);
     startGameTimer();
     return super.onLoad();
   }
@@ -107,8 +105,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     }
   }
 
-
-
   void gameOver() {
     if (isGameOver) return;
     resetFields();
@@ -116,6 +112,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     isGameOver = true;
     pauseEngine();
     checkHighScore();
+    removeAllPipes();
     showGameOverDialog(buildContext!);
   }
 
@@ -141,10 +138,12 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
         survivalTime: survivalTimerText.text,
         onRestart: () => restartGame(context),
         onExit: () {
+          removeAll(children);
+          overlays.clear();
           resetFields();
           navigateTo(child: BlocProvider.value(
               value: FlappyBloc(),
-              child: const FlappyHome()), context: context);
+              child: const FlappyHome()), context: context,shouldClearStack: true);
         },
       ),
     );
@@ -152,9 +151,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
 
 
   void removeAllPipes(){
-    for (var pipe in children.whereType<Pipe>()) {
-      pipe.removeFromParent();
-    }
+    for (var pipe in children.whereType<Pipe>()) pipe.removeFromParent();
   }
 
   void resetFields(){
@@ -165,7 +162,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     bird.position = Vector2(GameConstants.birdStartX, GameConstants.birdStartY);
     bird.velocity = 0;
     pipeManager.pipeSpawnTimer = 0;
-    removeAllPipes();
     GameSpeedManager.resetSpeed();
   }
 
@@ -173,7 +169,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     resetFields();
     _speedIncreaseTimer = async.Timer.periodic(const Duration(seconds: 10), (_)=> GameSpeedManager.increaseSpeed());
     isGameOver = false;
-    removeAllPipes();
     resumeEngine();
     startGameTimer();
     goBack(context);

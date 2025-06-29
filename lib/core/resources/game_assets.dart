@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:flame/components.dart' show Sprite;
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flappy/core/managers/audio_manager.dart';
 import 'package:flappy/features/flappy/components/flappy_components.dart';
-
 import '../../features/flappy/components/pipe_trap.dart';
 
 class GameAssets {
@@ -16,6 +14,8 @@ class GameAssets {
 
   static late Sprite pipeGreenUp;
   static late Sprite pipeGreenDown;
+  static late Sprite pipeBrownUp;
+  static late Sprite pipeBrownDown;
 
   static late Sprite backgroundDay;
   static late Sprite backgroundNight;
@@ -29,14 +29,6 @@ class GameAssets {
   static late Sprite yellowBirdMidFlap;
   static late Sprite yellowBirdUpFlap;
   static late Sprite yellowBirdDownFlap;
-
-  static Future<void> loadAudio()async{
-    await FlameAudio.audioCache.loadAll([
-      "trap_basic_sound.mp3",
-      "zombie.mp3",
-      "zombie1.mp3"
-    ]);
-  }
 
   static String getTrapType(int index){
     return switch(index){
@@ -53,5 +45,6 @@ class GameAssets {
     PipeTrap.initTraps();
     Ground.initGround();
     Bird.initBirds();
+    AudioManager.loadAudio();
   }
 }

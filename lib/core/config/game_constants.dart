@@ -1,9 +1,11 @@
+import 'package:flame_audio/flame_audio.dart';
+
 class GameConstants {
   // Bird properties
   static const double birdStartX = 100;
   static const double birdStartY = 100;
   static const double birdWidth = 40;
-  static const double gravity = 400;
+  static const double gravity = 340;
   static const double jumpStrength = -250;
 
   // Background & Environment
@@ -15,4 +17,6 @@ class GameConstants {
   static const double minPipeGap = 300;
   static const double minPipeHeight = 100;
   static const double pipeWidth = 60;
+
+  static const Map<String,AudioPlayer> audioCache = {};
 }

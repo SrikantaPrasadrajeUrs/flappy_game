@@ -8,16 +8,19 @@ import '../views/flappy_bird_game.dart';
 class Pipe extends SpriteComponent with CollisionCallbacks, HasGameRef<FlappyBirdGame>{
  final bool isStaticPipe;
  final bool isBottomPipe;
-  Pipe(Vector2 position,Vector2 size,{required this.isBottomPipe, required this.isStaticPipe}):super(size: size, position: position);
+ bool isBrownPipe;
+  Pipe(Vector2 position,Vector2 size,{required this.isBottomPipe, required this.isStaticPipe, this.isBrownPipe = false}):super(size: size, position: position);
 
   static initPipes()async{
     GameAssets.pipeGreenUp = await Sprite.load("pipe-green_up.png");
     GameAssets.pipeGreenDown = await Sprite.load("pipe-green_down.png");
+    GameAssets.pipeBrownUp = await Sprite.load("pipe_red_top.png");
+    GameAssets.pipeBrownDown = await Sprite.load("pipe_red_bottom.png");
   }
 
   @override
-  FutureOr<void> onLoad() async{
-    sprite = isBottomPipe?GameAssets.pipeGreenUp:GameAssets.pipeGreenDown;
+  FutureOr<void> onLoad() async {
+    sprite = isBrownPipe?(isBottomPipe?GameAssets.pipeBrownDown:GameAssets.pipeBrownUp):(!isBottomPipe?GameAssets.pipeGreenDown:GameAssets.pipeGreenUp);
     add(RectangleHitbox());
   }
 

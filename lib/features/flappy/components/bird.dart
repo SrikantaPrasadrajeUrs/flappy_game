@@ -2,6 +2,7 @@ import 'dart:async' as async;
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flappy/core/config/game_constants.dart';
+import 'package:flappy/core/managers/audio_manager.dart';
 import 'package:flappy/core/managers/game_speed_manager.dart';
 import 'package:flappy/core/resources/game_assets.dart';
 import 'package:flappy/features/flappy/components/pipe_trap.dart';
@@ -101,10 +102,12 @@ class Bird extends SpriteComponent with CollisionCallbacks{
   }
 
   @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other){
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other)async{
     super.onCollision(intersectionPoints, other);
     if(other is Ground||other is Pipe||other is PipeTrap){
       (parent as FlappyBirdGame).gameOver();
+      AudioManager.playAudio("trap_hit.mp3",volume: 2);
+
     }
   }
 }

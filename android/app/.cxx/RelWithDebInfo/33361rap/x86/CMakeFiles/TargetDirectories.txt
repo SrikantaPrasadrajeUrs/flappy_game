@@ -1,0 +1,2 @@
+/Users/apple/StudioProjects/flappy/android/app/.cxx/RelWithDebInfo/33361rap/x86/CMakeFiles/edit_cache.dir
+/Users/apple/StudioProjects/flappy/android/app/.cxx/RelWithDebInfo/33361rap/x86/CMakeFiles/rebuild_cache.dir

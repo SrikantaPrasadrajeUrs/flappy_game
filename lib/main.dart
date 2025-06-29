@@ -2,8 +2,6 @@ import 'package:flappy/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'features/flappy/views/splash.dart';
 
-
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());

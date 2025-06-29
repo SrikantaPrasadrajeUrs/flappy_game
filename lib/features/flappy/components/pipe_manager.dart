@@ -12,7 +12,7 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
   Pipe? singlePipe;
   bool isSingleTopPipe = false;
   bool isSingleBottomPipe = false;
-  int pipeIncreaseLength = 30;
+  int pipeIncreaseLength = 40;
 
   @override
   void update(double dt){
@@ -26,7 +26,7 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
     if(singlePipe!=null){
       final distance = gameRef.bird.position.x - singlePipe!.position.x;
       if(distance<150){
-        int turns = GameAssets.rand.nextInt(3);
+        int turns = GameAssets.rand.nextInt(4);
         if(isSingleTopPipe) {
           singlePipe!.size.y += dt*pipeIncreaseLength*turns;
         } else if(!singlePipe!.isStaticPipe) {
@@ -67,12 +67,12 @@ class PipeManager extends Component with HasGameRef<FlappyBirdGame>{
     );
     if (isSinglePipe) {
       if (onlyTopPipe) {
-        gameRef.add(topPipe);
+        gameRef.add(topPipe..isBrownPipe = GameAssets.rand.nextBool());
         singlePipe = topPipe;
         isSingleTopPipe = true;
         isSingleBottomPipe = false;
       } else {
-        gameRef.add(bottomPipe);
+        gameRef.add(bottomPipe..isBrownPipe = GameAssets.rand.nextBool());
         singlePipe = bottomPipe;
         isSingleTopPipe = false;
         isSingleBottomPipe = true;
