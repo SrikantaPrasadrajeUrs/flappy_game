@@ -1,36 +1,37 @@
 # 🐤 Flappy – A Simple Endless Flying Game
 
-🚀 **Flappy** is a fun, lightweight, and addictive endless flying game built using the [Flame](https://flame-engine.org/) game engine and **Flutter**. Inspired by the classic Flappy Bird, this game is perfect for quick gameplay and endless high score challenges!
+🚀 **Flappy** is a lightweight, addictive endless flying game built with [Flame](https://flame-engine.org/) and **Flutter**. Inspired by the classic Flappy Bird, it’s designed for quick, casual play and competitive high scores.
 
 ---
 
 ## 🎮 Features
 
-- ✨ Simple & smooth gameplay  
+- ✨ Smooth & simple gameplay  
 - 🏆 High score tracking  
-- 🔁 Endless Mode for non-stop fun  
-- 📱 Mobile-friendly & performance-optimized
+- 🔁 Endless mode  
+- 📱 Mobile-optimized performance
 
 ---
 
-## 📸 Screenshots
+## 📸 Preview
 
-![flappy_preview](https://github.com/user-attachments/assets/869f82d3-1d75-41ef-ad41-72e4c13ddc36)
+<img src="https://github.com/user-attachments/assets/869f82d3-1d75-41ef-ad41-72e4c13ddc36" alt="flappy_preview" width="300" height="500" />
 
 ---
 
 ## 📲 Download
 
-Try the game by downloading the APK:  
-[Download Flappy APK](https://drive.google.com/file/d/1BQoe2esI4iSUd86oz4ZTfnNSg-bIIE67/view?usp=drive_link)
+Get the latest APK:  
+👉 [Download Flappy APK](https://drive.google.com/file/d/1BQoe2esI4iSUd86oz4ZTfnNSg-bIIE67/view?usp=drive_link)
 
 ---
 
 ## 💻 Run Locally
 
-To run the game locally:
+To build and run the game locally:
 
-1. Clone the repository  
-   ```bash
-   git clone https://github.com/SrikantaPrasadrajeUrs/flappy_game.git
-   cd flappy_game
+```bash
+git clone https://github.com/SrikantaPrasadrajeUrs/flappy_game.git
+cd flappy_game
+flutter pub get
+flutter run
