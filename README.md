@@ -21,10 +21,7 @@
 <img src="https://github.com/user-attachments/assets/447dcc55-1688-4957-89ad-7e0504ef94a0" alt="flappy_preview" width="300" height="500" />
 
 ---
-## 🎥 Gameplay Video
-
-[![Watch Gameplay on LinkedIn](https://github.com/user-attachments/assets/447dcc55-1688-4957-89ad-7e0504ef94a0)](https://www.linkedin.com/feed/update/urn:li:ugcPost:7345435223112749057)
-
+## 🎥 Gameplay Video Link: https://www.linkedin.com/posts/srikantaurs_flutter-gamedev-flameengine-activity-7345435332378509313-LENQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEWTgG8Bc7aj59YMLs2iRQVNUc1iMsEjgEo
 ---
 
 ## 📲 Download
