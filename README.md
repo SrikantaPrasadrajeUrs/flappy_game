@@ -21,7 +21,9 @@
 <img src="https://github.com/user-attachments/assets/447dcc55-1688-4957-89ad-7e0504ef94a0" alt="flappy_preview" width="300" height="500" />
 
 ---
-<iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7345435223112749057?compact=1" height="399" width="504" frameborder="0" allowfullscreen="" title="Embedded post"></iframe>
+## 🎥 Gameplay Video
+
+[![Watch Gameplay on LinkedIn](https://github.com/user-attachments/assets/447dcc55-1688-4957-89ad-7e0504ef94a0)](https://www.linkedin.com/feed/update/urn:li:ugcPost:7345435223112749057)
 
 ---
 
