@@ -15,13 +15,21 @@
 
 ## 📸 Preview
 
-<img src="https://github.com/user-attachments/assets/869f82d3-1d75-41ef-ad41-72e4c13ddc36" alt="flappy_preview" width="300" height="500" />
-<img src="https://github.com/user-attachments/assets/ac864798-b513-494e-9b40-e4f7c59934ae" alt="flappy_preview" width="300" height="500" />
-<img src="https://github.com/user-attachments/assets/e2fd6e35-386e-4aee-ba24-9378e033aab4" alt="flappy_preview" width="300" height="500" />
-<img src="https://github.com/user-attachments/assets/447dcc55-1688-4957-89ad-7e0504ef94a0" alt="flappy_preview" width="300" height="500" />
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/869f82d3-1d75-41ef-ad41-72e4c13ddc36" alt="preview1" width="250" />
+  <img src="https://github.com/user-attachments/assets/ac864798-b513-494e-9b40-e4f7c59934ae" alt="preview2" width="250" />
+  <img src="https://github.com/user-attachments/assets/e2fd6e35-386e-4aee-ba24-9378e033aab4" alt="preview3" width="250" />
+  <img src="https://github.com/user-attachments/assets/447dcc55-1688-4957-89ad-7e0504ef94a0" alt="preview4" width="250" />
+</p>
 
 ---
-## 🎥 Gameplay Video Link: https://www.linkedin.com/posts/srikantaurs_flutter-gamedev-flameengine-activity-7345435332378509313-LENQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEWTgG8Bc7aj59YMLs2iRQVNUc1iMsEjgEo
+
+## 🎥 Gameplay Video
+
+[![Watch Gameplay](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.linkedin.com/posts/srikantaurs_flutter-gamedev-flameengine-activity-7345435332378509313-LENQ?utm_source=share&utm_medium=member_desktop)
+
+👉 [Watch on LinkedIn](https://www.linkedin.com/posts/srikantaurs_flutter-gamedev-flameengine-activity-7345435332378509313-LENQ?utm_source=share&utm_medium=member_desktop)
+
 ---
 
 ## 📲 Download
@@ -32,8 +40,6 @@ Get the latest APK:
 ---
 
 ## 💻 Run Locally
-
-To build and run the game locally:
 
 ```bash
 git clone https://github.com/SrikantaPrasadrajeUrs/flappy_game.git
